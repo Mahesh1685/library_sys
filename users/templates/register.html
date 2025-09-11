@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Library System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .register-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .register-container h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative; /* ← Added: for absolute positioning */
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #34495e;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: border 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    /* Eye icon */
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #7f8c8d;
+      font-size: 18px;
+    }
+
+    .error {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 5px;
+      display: block;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-register:hover {
+      background: #219653;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2>📝 Register</h2>
+
+    <!-- Show Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div style="background:#d5f5e3; color:#27ae60; padding:10px; border-radius:6px; margin-bottom:15px; font-size:14px;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Registration Form -->
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="{{ form.email.value }}" required>
+        {% if form.email.errors %}
+          <span class="error">{{ form.email.errors }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="year_of_study">Year of Study</label>
+        <select name="year_of_study" id="year_of_study" required>
+          <option value="">-- Select Year --</option>
+          <option value="1" {% if form.year_of_study.value == 1 %}selected{% endif %}>1st Year</option>
+          <option value="2" {% if form.year_of_study.value == 2 %}selected{% endif %}>2nd Year</option>
+          <option value="3" {% if form.year_of_study.value == 3 %}selected{% endif %}>3rd Year</option>
+          <option value="4" {% if form.year_of_study.value == 4 %}selected{% endif %}>4th Year</option>
+        </select>
+        {% if form.year_of_study.errors %}
+          <span class="error">{{ form.year_of_study.errors }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="password1">Password</label>
+        <input type="password" name="password1" id="password1" required>
+        <span class="toggle-password" onclick="togglePassword('password1')">👁️</span>
+        {% if form.password1.errors %}
+          <span class="error">{{ form.password1.errors }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="password2">Confirm Password</label>
+        <input type="password" name="password2" id="password2" required>
+        <span class="toggle-password" onclick="togglePassword('password2')">👁️</span>
+        {% if form.password2.errors %}
+          <span class="error">{{ form.password2.errors }}</span>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-register">Register</button>
+    </form>
+
+    <!-- Already have an account? -->
+    <div class="login-link">
+      Already a user? <a href="{% url 'login' %}">Log in here</a>
+    </div>
+  </div>
+
+  <!-- ✅ Script moved here -->
+  <script>
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      const type = field.type === 'password' ? 'text' : 'password';
+      field.type = type;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile | Library System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #3498db;
+    }
+
+    .header h2 {
+      color: #2c3e50;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    .profile-info {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .profile-info p {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .total-due {
+      font-size: 18px;
+      font-weight: 600;
+      color: #e74c3c;
+      margin-top: 15px;
+    }
+
+    .total-due.zero {
+      color: #27ae60;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .no-books {
+      text-align: center;
+      color: #7f8c8d;
+      font-style: italic;
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+    }
+
+    .actions {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+    }
+
+    .btn-disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+
+    .btn-disabled:hover {
+      background: #7f8c8d;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h2>🧑‍🎓 Your Profile</h2>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Profile Info -->
+    <div class="profile-info">
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Year of Study:</strong>
+        {% if user.year_of_study == 1 %}1st Year
+        {% elif user.year_of_study == 2 %}2nd Year
+        {% elif user.year_of_study == 3 %}3rd Year
+        {% elif user.year_of_study == 4 %}4th Year
+        {% else %}Not Set{% endif %}
+      </p>
+
+      <!-- Total Due -->
+      <p class="total-due {% if total_due == 0 %}zero{% endif %}">
+        <strong>Total Due: ₹{{ total_due }}</strong>
+      </p>
+    </div>
+
+    <!-- Available Books to Borrow -->
+    <div class="section">
+      <h3>📘 Available Books</h3>
+
+      {% if books %}
+        <table>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Available Copies</th>
+            <th>Action</th>
+          </tr>
+          {% for book in books %}
+          <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.available_copies }}</td>
+            <td>
+              {% if book.available_copies > 0 %}
+                <!-- Check if already requested -->
+                {% if book.id in pending_request_book_ids %}
+                  <span style="color: #f39c12;">Pending Approval</span>
+                {% else %}
+                  <form method="post" action="{% url 'request_borrow' book.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Borrow</button>
+                  </form>
+                {% endif %}
+              {% else %}
+                <span style="color: #e74c3c;">Not Available</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <div class="no-books">No books available for borrowing.</div>
+      {% endif %}
+    </div>
+
+  <!-- Issued Books -->
+<div class="section">
+  <h3>📚 Borrowed Books</h3>
+  {% if issued_request %}
+    <table>
+      <tr>
+        <th>Book Title</th>
+        <th>Issue Date</th>
+        <th>Due Date</th>
+        <th>Fine (₹)</th>
+      </tr>
+      {% for b in issued_request %}
+      <tr>
+        <td>{{ b.book.title }}</td>
+        <td>{{ b.issue_date }}</td>
+        <td>{{ b.due_date }}</td>
+        <td>{{ b.fine }}</td>
+        <td>
+            {% if b.return_date %}
+            <span style="color: #27ae60;font-weight: 600;">Returned</span>
+            {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+      <p><small>Return the book before due date to avoid fines</small></p>
+  {% else %}
+    <div class="no-books">You haven't borrowed any books</div>
+  {% endif %}
+</div>
+</div>
+
+  </div>
+
+    <!-- Browse More Books -->
+    <div class="actions">
+      <a href="{% url 'book_list' %}" class="btn">Browse All Books</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

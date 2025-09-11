@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Book</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f7f9fc;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+    button {
+      background: #27ae60;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #219653;
+    }
+    .back-link {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      color: #3498db;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>📘 Edit Book</h2>
+
+    <!-- Show Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+          {{ message }}
+        </p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <p>
+        <label>Title:</label>
+        <input type="text" name="title" value="{{ form.title.value|default:book.title }}" required>
+        {% if form.title.errors %}<div class="error">{{ form.title.errors }}</div>{% endif %}
+      </p>
+
+      <p>
+        <label>Author:</label>
+        <input type="text" name="author" value="{{ form.author.value|default:book.author }}" required>
+        {% if form.author.errors %}<div class="error">{{ form.author.errors }}</div>{% endif %}
+      </p>
+
+      <p>
+        <label>ISBN:</label>
+        <input type="text" name="isbn" value="{{ form.isbn.value|default:book.isbn }}" required>
+        {% if form.isbn.errors %}<div class="error">{{ form.isbn.errors }}</div>{% endif %}
+      </p>
+
+      <p>
+        <label>Total Copies:</label>
+        <input type="number" name="total_copies" value="{{ form.total_copies.value|default:book.total_copies }}" min="1" required>
+        {% if form.total_copies.errors %}<div class="error">{{ form.total_copies.errors }}</div>{% endif %}
+      </p>
+
+      <button type="submit">💾 Save Changes</button>
+    </form>
+
+    <a href="{% url 'librarian_dashboard' %}" class="back-link">← Back to Dashboard</a>
+  </div>
+
+</body>
+</html>

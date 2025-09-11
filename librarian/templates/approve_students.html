@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Approve Students | Library System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #3498db;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .form-inline {
+      display: inline;
+    }
+
+    .form-inline input[type="text"] {
+      padding: 6px;
+      width: 100px;
+      margin-right: 10px;
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-approve {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-approve:hover {
+      background: #219653;
+    }
+
+    .btn-decline {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-decline:hover {
+      background: #c0392b;
+    }
+
+    .no-pending {
+      text-align: center;
+      color: #7f8c8d;
+      font-style: italic;
+      padding: 20px;
+    }
+
+    .messages {
+      background: #d5f5e3;
+      color: #27ae60;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>👥 Approve New Students</h2>
+
+    <a href="{% url 'librarian_dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+    <!-- Show Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="{% if message.tags == 'error' %}error{% else %}messages{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if students %}
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Year of Study</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td>{{ student.email }}</td>
+            <td>
+              {% if student.year_of_study == 1 %}1st Year
+              {% elif student.year_of_study == 2 %}2nd Year
+              {% elif student.year_of_study == 3 %}3rd Year
+              {% elif student.year_of_study == 4 %}4th Year
+              {% else %}Not Set{% endif %}
+            </td>
+            <td>
+              <form method="post" action="{% url 'approve_students' %}" class="form-inline">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ student.id }}">
+                Username: <input type="text" name="username" required>
+                <button type="submit" name="action" value="approve" class="btn btn-approve">Approve</button>
+                <button type="submit" name="action" value="decline" class="btn btn-decline">Decline</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="no-pending">No pending student registrations.</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>

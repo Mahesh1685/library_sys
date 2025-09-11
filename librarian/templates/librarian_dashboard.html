@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Librarian Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 20px;
+      background: #f4f6f9;
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .nav {
+      margin-bottom: 30px;
+      padding: 10px;
+      background: #ecf0f1;
+      border-radius: 8px;
+    }
+    .nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #2980b9;
+      font-weight: 600;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f8f9fa;
+      color: #2c3e50;
+    }
+    .btn {
+      padding: 6px 12px;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: #2980b9;
+    }
+    .btn-danger {
+      background: #e74c3c;
+    }
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+    .form-inline {
+      display: inline;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    .logout {
+      float: right;
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .logout:hover {
+      color: #c0392b;
+      text-decoration: none;
+    }
+    .messages {
+      background: #d5f5e3;
+      color: #27ae60;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Show Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="messages {% if message.tags == 'error' %}error{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <h2>🔐 Librarian Dashboard</h2>
+    <div class="nav">
+      <a href="{% url 'add_book' %}">➕ Add Book</a>
+      <a href="{% url 'approve_students' %}">👥 Approve Students</a>
+      <a href="{% url 'book_list' %}">📚 View All Books</a>
+      <a class="logout" href="{% url 'logout' %}">Logout</a>
+    </div>
+
+    <!-- Pending Students -->
+    <div class="section">
+      <h3>🆕 Pending Student Registrations</h3>
+      {% if pending_students %}
+      <table>
+        <tr>
+          <th>Email</th>
+          <th>Year</th>
+          <th>Action</th>
+        </tr>
+        {% for student in pending_students %}
+        <tr>
+          <td>{{ student.email }}</td>
+          <td>{{ student.get_year_of_study_display }}</td>
+          <td>
+            <form method="post" action="{% url 'approve_students' %}" class="form-inline">
+              {% csrf_token %}
+              <input type="hidden" name="user_id" value="{{ student.id }}">
+              Username: <input type="text" name="username" style="padding:5px; width:100px;">
+              <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+              <button type="submit" name="action" value="decline" class="btn btn-danger">Decline</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p><em>No pending student registrations.</em></p>
+      {% endif %}
+    </div>
+
+    <!-- Approved Students -->
+    <div class="section">
+      <h3>🎓 Approved Students</h3>
+      {% if approved_students %}
+        <!-- Search Bar -->
+        <div class="search-bar" style="margin: 10px 0;">
+          <input type="text" placeholder="Search students..."
+                 onkeyup="filterStudents(this)"
+                 style="padding:8px; width:100%; max-width:300px;">
+        </div>
+
+        <!-- Table with ID for search -->
+        <table id="students-table">
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Year of Study</th>
+            <th>Action</th>
+          </tr>
+          {% for student in approved_students %}
+          <tr>
+            <td>{{ student.username }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.get_year_of_study_display }}</td>
+            <td>
+              <a href="{% url 'revoke_student' student.id %}"
+                 style="color:#e74c3c; font-size:14px;"
+                 onclick="return confirm('Revoke access for {{ student.username }}?');">
+                Revoke Access
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <p><em>No approved students yet.</em></p>
+      {% endif %}
+    </div>
+
+    <!-- Pending Borrow Requests -->
+    <div class="section">
+      <h3>📥 Pending Borrow Requests</h3>
+        {% if pending_requests %}
+          <table>
+            <tr>
+              <th>Student</th>
+              <th>Book</th>
+              <th>Requested</th>
+              <th>Action</th>
+            </tr>
+            {% for req in pending_requests %}
+            <tr>
+              <td>{{ req.student.email }}</td>
+              <td>{{ req.book.title }}</td>
+              <td>{{ req.requested_at|date:"M d, H:i" }}</td>
+              <td>
+                <form method="post" action="{% url 'approve_borrow_request' req.id %}" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn">Approve</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% else %}
+          <p><em>No pending borrow requests.</em></p>
+        {% endif %}
+    </div>
+
+    <!-- Books Section -->
+    <div class="section">
+      <h3>📘 Books in Library</h3>
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>ISBN</th>
+          <th>Total Copies</th>
+          <th>Available</th>
+          <th>Action</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.total_copies }}</td>
+          <td>{{ book.available_copies }}</td>
+          <td>
+            <a href="{% url 'edit_book' book.pk %}" class="btn">Edit</a> |
+            <a href="{% url 'delete_book' book.pk %}" class="btn btn-danger">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">No books added yet. <a href="{% url 'add_book' %}">Add one now</a>.</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <!-- Currently Issued Books -->
+<div class="section">
+  <h3>📖 Currently Issued Books</h3>
+  {% if borrowed_books %}
+    <table>
+      <tr>
+        <th>Student</th>
+        <th>Book</th>
+        <th>Issue Date</th>
+        <th>Due Date</th>
+        <th>Fine (₹)</th>
+        <th>Action</th>
+      </tr>
+      {% for b in borrowed_books %}
+      <tr>
+        <td>{{ b.student.username }}</td>
+        <td>{{ b.book.title }}</td>
+        <td>{{ b.issue_date }}</td>
+        <td>{{ b.due_date }}</td>
+        <td>{{ b.fine }}</td>
+        <td>
+            <form method="post" action="{% url 'return_book' b.pk %}" style="display: inline">
+                {% csrf_token %}
+                <button type="submit" class="btn">Returned</button>
+            </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p><em>You haven't issued any books yet</em></p>
+  {% endif %}
+</div>
+  </div>
+
+  <!-- Search Script -->
+  <script>
+    function filterStudents(input) {
+      const filter = input.value.toLowerCase();
+      const rows = document.querySelectorAll('#students-table tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

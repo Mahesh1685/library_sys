@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Books | Library System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #3498db;
+    }
+
+    .header h2 {
+      color: #2c3e50;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    .search-form {
+      margin-bottom: 20px;
+      display: flex;
+      max-width: 500px;
+    }
+
+    .search-form input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px 0 0 6px;
+      font-size: 15px;
+    }
+
+    .search-form button {
+      padding: 0 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .search-form button:hover {
+      background: #2980b9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .no-books {
+      text-align: center;
+      color: #7f8c8d;
+      font-style: italic;
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .copies {
+      font-size: 14px;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header with Title and Logout -->
+    <div class="header">
+      <h2>📚 Available Books</h2>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Search Bar -->
+    <form method="get" class="search-form">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search by title, author, or ISBN"
+        value="{{ query|default:'' }}"
+      >
+      <button type="submit">Search</button>
+    </form>
+
+    <!-- Books Table -->
+    {% if books %}
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Copies Available</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in books %}
+          <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>
+              <span class="copies">
+                {{ book.available_copies }} / {{ book.total_copies }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="no-books">
+        No books found matching "{{ query }}".<br>
+        <small>Try a different search term.</small>
+      </div>
+    {% endif %}
+
+  </div>
+
+</body>
+</html>
