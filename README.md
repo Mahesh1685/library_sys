@@ -14,43 +14,43 @@ Features:-
                       - students as well as librarian can change his password by clicking forget password,  
                       - can logout after their job done.
   
-2.Student workflow ->   register with email and year of study,  
-                        can request for borrowing books,  
-                        view issued(borrowed)books and return status such as due date ,fine amount after due date .  
+2.Student workflow -> - register with email and year of study,  
+                      - can request for borrowing books,  
+                      - view issued(borrowed)books and return status such as due date ,fine amount after due date .  
                           
-2.Librarian workflow -> librarian can add books(books based on title,author,isbn code,total copies),  
-                        can edit books,  
-                        can approve student for registered one,  
-                        can approve books for borrow request [note:students only borrow those requested books physically),  
-                        can revoke the access of student,  
-                        can delete books,  
-                        can monthly report about books and students to college automatically.  
+2.Librarian workflow -> - librarian can add books(books based on title,author,isbn code,total copies),  
+                        - can edit books,  
+                        - can approve student for registered one,  
+                        - can approve books for borrow request [note:students only borrow those requested books physically),  
+                        - can revoke the access of student,  
+                        - can delete books,  
+                        - can monthly report about books and students to college automatically.  
 
 3.Borrowing workflow -> after approval:-  
                                         *copy count decreases  
                                         *due date set (14 days)  
                                         *record created in librarian dhasboard as well as student dashboard  
 
-4.Yearly scheduling -> cron job to promote students anually (1st year -> 2nd year // 2nd year -> 3rd year)  
-                       delete final year students on june 30 of every year(for 3rd years)  
+4.Yearly scheduling -> - cron job to promote students anually (1st year -> 2nd year // 2nd year -> 3rd year)  
+                       - delete final year students on june 30 of every year(for 3rd years)  
               
-5.UI features -> used CSS and google fonts(poppins)  
-                  user friendly validation with show password toggle button  
-                  search functionality for books (for students/librarian) and students (for librarian)  
+5.UI features -> - used CSS and google fonts(poppins)  
+                 - user friendly validation with show password toggle button  
+                 - search functionality for books (for students/librarian) and students (for librarian)  
                           
-6.Email integration -> approval confirmation for students  
-                       password reset emails  
-                       used gmail's SMTP  
+6.Email integration -> - approval confirmation for students  
+                       - password reset emails  
+                       - used gmail's SMTP  
 
 
 **Final Tech Stack**
 
-Frontend -> HTML,CSS,JS  
-Backend -> Django  
-Database -> SQLite  
-Auth -> Built in Django + Custom Roles  
-Email -> GMAIL's SMTP  
-Scheduling -> Django-crontab  
+Frontend   -> HTML,CSS,JS  
+Backend    -> Django  
+Database   -> SQLite  
+Auth       -> Built in Django + Custom Roles  
+Email      -> GMAIL's SMTP  
+Scheduling -> Django-crontab    
 
 
 
