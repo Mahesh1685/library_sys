@@ -41,7 +41,7 @@ Features:-
                        - password reset emails  
                        - used gmail's SMTP  
                        
-7.Additional features -> - sends email as a due date reminder to students after 7 days of book handover by librarian,
+7.Additional features -> - sends email as a due date reminder to students after 7 days of book handover by librarian,  
                          - create a pdf report to send for college administration as no of books borrowed/no of students approved etc....  
 
 
