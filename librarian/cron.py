@@ -9,59 +9,20 @@ from users.models import CustomUser
 
 
 def send_due_date_reminders():
-    """Send email 7 days before due date"""
     upcoming_date = timezone.now().date() + timedelta(days=7)
-    books_due_soon = BorrowedBook.objects.filter(
-        due_date=upcoming_date,
-        return_date__isnull=True
-    )
-
-    for record in books_due_soon:
-        send_mail(
-            subject="📚 Reminder: Book Due Soon",
-            message=f"""
-Hello {record.student.first_name or record.student.email},
-
-This is a reminder that the book "{record.book.title}" is due on {record.due_date}.
-Please return it on time to avoid fines (₹5/day).
-
-Thank you!
-Library Management System
-            """,
-            recipient_list=[record.student.email],
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            fail_silently=False,
-        )
-    print(f"Sent {books_due_soon.count()} due date reminders.")
-
-
-def send_monthly_report():
-    pdf_path = generate_monthly_report_pdf()
-    librarian = CustomUser.objects.filter(role='librarian', is_approved=True).first()
-
-    if not librarian:
-        print("No approved librarian found.")
-        return
-
-    msg = EmailMessage(
-    subject=f"📚 Monthly Library Report - {datetime.now().strftime('%B %Y')}",
-    body="Please find the attached monthly library report.",
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    to=[librarian.email]
-    )
-    msg.attach_file(pdf_path)
-    msg.send()
-
-    print(f"Monthly report sent to {librarian.email}")
-
-
-def send_due_date_reminders():
-    upcoming_date = timezone.now().date() + timedelta(days=7)
-    books = BorrowedBook.objects.filter(due_date=upcoming_date, return_date__isnull=True)
+    books = BorrowedBook.objects.filter(handover_date__isnull=False, due_date=upcoming_date, return_date__isnull=True)
     for b in books:
         send_mail(
             "📚 Reminder: Book Due Soon",
-            f"Hi {b.student.email}, '{b.book.title}' is due on {b.due_date}. Return it on time!",
+            f"""
+        Hello {b.student.username},
+
+        This is a reminder that the book "{b.book.title}" is due on {b.due_date}.
+        Please return it on time to avoid fines (₹5/day).
+
+        Thank you!
+        Library Management System
+                    """,
             settings.DEFAULT_FROM_EMAIL,
             [b.student.email]
         )

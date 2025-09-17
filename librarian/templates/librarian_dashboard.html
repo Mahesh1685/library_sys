@@ -276,6 +276,16 @@
         <td>{{ b.due_date }}</td>
         <td>{{ b.fine }}</td>
         <td>
+            {% if b.handover_date %}
+            {{ b.handover_date }}
+            {% else %}
+            <form action="{% url 'mark_handover' b.pk %}"style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn">Hand over</button>
+            </form>
+            {% endif %}
+        </td>
+        <td>
             <form method="post" action="{% url 'return_book' b.pk %}" style="display: inline">
                 {% csrf_token %}
                 <button type="submit" class="btn">Returned</button>

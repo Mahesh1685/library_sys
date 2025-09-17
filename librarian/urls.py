@@ -13,4 +13,5 @@ urlpatterns = [
     path('revoke/<int:pk>/', views.revoke_student, name='revoke_student'),
     path('request-borrow/<int:book_id>/', views.request_borrow, name='request_borrow'),
     path('approve-request/<int:request_id>/', views.approve_borrow_request, name='approve_borrow_request'),
+    path('mark-handover/<int:pk>/', views.mark_handover, name='mark_handover'),
 ]

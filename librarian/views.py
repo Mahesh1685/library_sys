@@ -227,3 +227,21 @@ def approve_borrow_request(request, request_id):
         print("🚨 ERROR:", error_msg)
 
     return redirect('librarian_dashboard')
+
+@login_required
+def mark_handover(request, pk):
+    if request.user.role != 'librarian':
+        return redirect('home')
+
+    borrowed_book = get_object_or_404(BorrowedBook, pk=pk)
+
+    if not borrowed_book.handover_date:
+        # Set handover date to today
+        borrowed_book.handover_date = timezone.now().date()
+        # Reset due date from handover
+        borrowed_book.due_date = borrowed_book.handover_date + timezone.timedelta(days=14)
+        borrowed_book.save()
+
+        messages.success(request, f"✅ '{borrowed_book.book.title}' marked as handed over. Due: {borrowed_book.due_date}")
+
+    return redirect('librarian_dashboard')
