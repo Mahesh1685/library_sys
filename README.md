@@ -23,8 +23,7 @@ Features:-
                         - can approve student for registered one,  
                         - can approve books for borrow request [note:students only borrow those requested books physically),  
                         - can revoke the access of student,  
-                        - can delete books,  
-                        - can monthly report about books and students to college automatically.  
+                        - can delete books.  
 
 3.Borrowing workflow -> after approval:-  
                                         *copy count decreases  
@@ -41,6 +40,9 @@ Features:-
 6.Email integration -> - approval confirmation for students  
                        - password reset emails  
                        - used gmail's SMTP  
+                       
+7.Additional features -> - sends email as a due date reminder to students after 7 days of book handover by librarian,
+                         - create a pdf report to send for college administration as no of books borrowed/no of students approved etc....  
 
 
 **Final Tech Stack**
