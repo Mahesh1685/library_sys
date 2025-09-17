@@ -23,39 +23,39 @@ Features:-
                         can approve student for registered one,  
                         can approve books for borrow request [note:students only borrow those requested books physically),  
                         can revoke the access of student,  
-                        can also approve student to librarian,  
-                        can delete books.  
+                        can delete books,  
+                        can monthly report about books and students to college automatically.  
 
-3.Borrowing workflow -> after approval:-
-                                        *copy count decreases
-                                        *due date set (14 days)
-                                        *record created in librarian dhasboard as well as student dashboard
+3.Borrowing workflow -> after approval:-  
+                                        *copy count decreases  
+                                        *due date set (14 days)  
+                                        *record created in librarian dhasboard as well as student dashboard  
 
-4.Yearly scheduling -> cron job to promote students anually (1st year -> 2nd year // 2nd year -> 3rd year)
-                       delete final year students on june 30 of every year(for 3rd years)
+4.Yearly scheduling -> cron job to promote students anually (1st year -> 2nd year // 2nd year -> 3rd year)  
+                       delete final year students on june 30 of every year(for 3rd years)  
               
-5.UI features -> used CSS and google fonts(poppins)
-                  user friendly validation with show password toggle button
-                  search functionality for books (for students/librarian) and students (for librarian)        
+5.UI features -> used CSS and google fonts(poppins)  
+                  user friendly validation with show password toggle button  
+                  search functionality for books (for students/librarian) and students (for librarian)  
                           
-6.Email integration -> approval confirmation for students
-                       password reset emails
-                       used gmail's SMTP
+6.Email integration -> approval confirmation for students  
+                       password reset emails  
+                       used gmail's SMTP  
 
 
 **Final Tech Stack**
 
-Frontend -> HTML,CSS,JS
-Backend -> Django
-Database -> SQLite
-Auth -> Built in Django + Custom Roles
-Email -> GMAIL's SMTP 
-Scheduling -> Django-crontab
+Frontend -> HTML,CSS,JS  
+Backend -> Django  
+Database -> SQLite  
+Auth -> Built in Django + Custom Roles  
+Email -> GMAIL's SMTP  
+Scheduling -> Django-crontab  
 
 
 
 
 
 
-*Developed by : R. Maheshwaran
-College : Ramakrishna Mission Vivekananda College,Mylapore,Chennai-04*
+*Developed by : R. Maheshwaran  
+College : Ramakrishna Mission Vivekananda College,Mylapore,Chennai-04*  
