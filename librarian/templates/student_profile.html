@@ -216,6 +216,31 @@
       {% endif %}
     </div>
 
+      <!-- Previous Year Question Papers -->
+<div class="section">
+  <h3>📄 Previous Year Question Papers</h3>
+  {% if question_papers %}
+    <table>
+      <tr>
+        <th>Subject</th>
+        <th>Semester</th>
+        <th>Action</th>
+      </tr>
+      {% for qp in question_papers %}
+      <tr>
+        <td>{{ qp.get_subject_display }}</td>
+        <td>{{ qp.get_semester_display }}</td>
+        <td>
+          <a href="{{ qp.pdf.url }}" class="btn" target="_blank">Download PDF</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p><em>No question papers available for your department yet.</em></p>
+  {% endif %}
+</div>
+
   <!-- Issued Books -->
 <div class="section">
   <h3>📚 Borrowed Books</h3>

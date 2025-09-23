@@ -6,10 +6,11 @@ from users.models import CustomUser
 class StudentRegistrationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+    department=forms.ChoiceField(choices=CustomUser.DEPARTMENT_CHOICES,initial=None,required=True)
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'year_of_study')
+        fields = ('email', 'year_of_study','department')
 
     def clean_password2(self):
         p1 = self.cleaned_data.get('password1')
@@ -24,6 +25,7 @@ class StudentRegistrationForm(forms.ModelForm):
         user.role = 'student'
         user.pending_approval = True
         user.is_approved = False
+        user.department = self.cleaned_data['department']
         if commit:
             user.save()
         return user

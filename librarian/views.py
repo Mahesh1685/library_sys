@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-from librarian.models import Book, BorrowedBook, BorrowRequest
+from librarian.models import Book, BorrowedBook, BorrowRequest, QuestionPaper
 from librarian.forms import BookForm
 from users.models import CustomUser  # Make sure this is correct
 from django.utils import timezone
@@ -151,6 +151,8 @@ def student_profile(request):
     issued_request = BorrowedBook.objects.filter(student=request.user)
     pending_request_book_ids = pending_request.values_list('book_id', flat=True)
     total_due = sum(b.fine for b in issued_request)
+    department=request.user.department
+    question_papers=QuestionPaper.objects.filter(department=department).order_by('semester','subject')
 
     return render(request, 'student_profile.html', {
         'books': books,
@@ -158,6 +160,7 @@ def student_profile(request):
         'issued_request': issued_request,
         'total_due': total_due,
         'pending_request_book_ids': pending_request_book_ids,
+        'question_papers': question_papers,
     })
 
 @login_required

@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from users.models import CustomUser
 
 User = get_user_model()
 
@@ -70,3 +71,33 @@ class BorrowRequest(models.Model):
 
     def __str__(self):
         return f"{self.student.username} → {self.book.title} ({self.status})"
+
+DEPARTMENT_CHOICES = [
+        ('B.Sc.C.S.','B.Sc.Computer Science'),
+        ('B.C.A.','B.Computer Application'),
+        ('B.Com.','B.Commerce'),
+    ]
+
+class QuestionPaper(models.Model):
+    SUBJECT_CHOICES = [
+        ('Python','Python Programming'),
+        ('Java','Java Programming'),
+        ('Integration','Integral Calculus'),
+        ('Banking','Intro to Banking'),
+    ]
+    SEMESTER_CHOICES = [
+        ('sem1','Semester1'),
+        ('sem2', 'Semester2'),
+        ('sem3', 'Semester3'),
+        ('sem4', 'Semester4'),
+        ('sem5', 'Semester5'),
+        ('sem6', 'Semester6'),
+    ]
+    subject=models.CharField(max_length=30, choices=SUBJECT_CHOICES)
+    semester=models.CharField(max_length=10, choices=SEMESTER_CHOICES)
+    department=models.CharField(max_length=20, choices=DEPARTMENT_CHOICES)
+    pdf=models.FileField(upload_to='qns/')
+    uploaded_at=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.get_subject_display()} - {self.get_department_display()} {self.semester}"
