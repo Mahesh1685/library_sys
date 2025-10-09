@@ -1,3 +1,5 @@
+#Only admin can upload Question papers to students based on department wise and semester wise
+
 from django.contrib import admin
 from .models import QuestionPaper
 

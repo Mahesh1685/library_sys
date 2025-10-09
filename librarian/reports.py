@@ -1,3 +1,5 @@
+#file for handling how the pdf monthly report to be submitted as
+
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum
 from django.template.loader import render_to_string
@@ -6,11 +8,11 @@ import weasyprint
 from django.conf import settings
 import os
 
-def generate_monthly_report_pdf():
-    today = datetime.now().date()
-    first_day = today.replace(day=1)
-    last_month = first_day - timedelta(days=1)
-    start_date = last_month.replace(day=1)
+def generate_monthly_report_pdf(): #generates a pdf every first day of every month
+    today = datetime.now().date() #gets today's date
+    first_day = today.replace(day=1) #replace today's date as 1 and assigns to first day
+    last_month = first_day - timedelta(days=1) #subtracts the first day with one day and assigns it to last month i.e.one day before today ;as today assigned as 1 ;it gets to previous month
+    start_date = last_month.replace(day=1) #on previous month last date is replaced as first date of that month
     end_date = last_month
 
     # Most borrowed books

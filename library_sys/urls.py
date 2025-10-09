@@ -22,12 +22,12 @@ from users import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',views.home,name='home'),
-    path('users/', include('users.urls')),
-    path('library/', include('librarian.urls')),
-    path('password-reset/',auth_views.PasswordResetView.as_view(template_name='password_reset.html',email_template_name='password_reset_email.txt.html',subject_template_name='password_reset_subject.txt',success_url='/password-reset/done/'),name='password_reset'),
-    path('password-reset/done/',auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'),name='password_reset_done'),
-    path('password-confirm/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html',success_url='/password-reset-complete/'),name='password_reset_confirm'),
-    path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),name='password_reset_complete'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('admin/', admin.site.urls), #navigates to admin panel
+    path('',views.home,name='home'), #navigates to home page of Library Management System
+    path('users/', include('users.urls')),  #includes urls of user app
+    path('library/', include('librarian.urls')), #includes urls of librarian app
+    path('password-reset/',auth_views.PasswordResetView.as_view(template_name='password_reset.html',email_template_name='password_reset_email.txt.html',subject_template_name='password_reset_subject.txt',success_url='/password-reset/done/'),name='password_reset'), #navigates to password reset page
+    path('password-reset/done/',auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'),name='password_reset_done'), #navigates to password reset done page
+    path('password-confirm/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html',success_url='/password-reset-complete/'),name='password_reset_confirm'), #displays password reset confirm page
+    path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),name='password_reset_complete'), #displays password reset is completed page
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #used for navigating to qn papers and reports as pdf file

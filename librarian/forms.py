@@ -1,4 +1,5 @@
-# library/forms.py
+#Forms for Librarian to add/edit/delete books from library
+
 from django import forms
 from librarian.models import Book
 

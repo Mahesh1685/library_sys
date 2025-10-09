@@ -1,3 +1,5 @@
+#This file is used for Scheduling the due date remainder to students for 7th day before due date and also Librarian can make monthly report based on most borrowed books and students approved so far as auto scheduling using Django's Cron
+
 from datetime import timedelta, datetime
 from django.core.mail import send_mail
 from django.conf import settings
@@ -8,7 +10,7 @@ from django.core.mail import EmailMessage
 from users.models import CustomUser
 
 
-def send_due_date_reminders():
+def send_due_date_reminders(): #function for due date remainder
     upcoming_date = timezone.now().date() + timedelta(days=7)
     books = BorrowedBook.objects.filter(handover_date__isnull=False, due_date=upcoming_date, return_date__isnull=True)
     for b in books:
@@ -27,7 +29,7 @@ def send_due_date_reminders():
             [b.student.email]
         )
 
-def send_monthly_report():
+def send_monthly_report(): #function for sending monthly report
     from .reports import generate_monthly_report_pdf
     pdf_path = generate_monthly_report_pdf()
     librarian = CustomUser.objects.filter(role='librarian', is_approved=True).first()
