@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from django.db.models import Count, Sum
 from django.template.loader import render_to_string
 from librarian.models import Book, BorrowedBook
-import weasyprint
+import weasyprint #to convert html page into a pdf for a report
 from django.conf import settings
 import os
 
@@ -24,7 +24,7 @@ def generate_monthly_report_pdf(): #generates a pdf every first day of every mon
 
     # New books added
     new_books = Book.objects.filter(
-        created_at__range=[start_date, end_date]  # Add created_at field to Book model
+        created_at__range=[start_date, end_date]
     )
 
     # Stats

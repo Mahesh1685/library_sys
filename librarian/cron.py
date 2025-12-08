@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 from librarian.models import BorrowedBook
-from librarian.reports import (generate_monthly_report_pdf)
+from librarian.reports import generate_monthly_report_pdf
 from django.core.mail import EmailMessage
 from users.models import CustomUser
 
@@ -30,7 +30,6 @@ def send_due_date_reminders(): #function for due date remainder
         )
 
 def send_monthly_report(): #function for sending monthly report
-    from .reports import generate_monthly_report_pdf
     pdf_path = generate_monthly_report_pdf()
     librarian = CustomUser.objects.filter(role='librarian', is_approved=True).first()
     if librarian:
