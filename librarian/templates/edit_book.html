@@ -67,7 +67,7 @@
 <body>
 
   <div class="container">
-    <h2>📘 Edit Book</h2>
+    <h2>Edit Book</h2>
 
     <!-- Show Messages -->
     {% if messages %}
@@ -105,7 +105,7 @@
         {% if form.total_copies.errors %}<div class="error">{{ form.total_copies.errors }}</div>{% endif %}
       </p>
 
-      <button type="submit">💾 Save Changes</button>
+      <button type="submit">Save Changes</button>
     </form>
 
     <a href="{% url 'librarian_dashboard' %}" class="back-link">← Back to Dashboard</a>

@@ -42,6 +42,10 @@ def generate_monthly_report_pdf(): #generates a pdf every first day of every mon
         'new_books': new_books,
         'total_issued': total_issued,
         'total_fines_collected': total_fines_collected,
+        'total_books':total_books,
+        'start_date': start_date,
+        'end_date': end_date,
+        'today': today,
     })
 
     pdf_file = f"monthly_report_{last_month.strftime('%Y_%m')}.pdf"

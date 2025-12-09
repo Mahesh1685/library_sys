@@ -142,7 +142,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRONJOBS = [
     ('0 8 * * *', 'librarian.cron.send_due_date_reminders'),      # Every day at 8 AM
     ('0 9 1 * *', 'librarian.cron.send_monthly_report'),          # 1st of every month at 9 AM
-    ('0 1 30 6 *', 'librarian.management.commands.yearly_student'),
+    ('0 1 30 6 *', 'librarian.management.commands.yearly_student'), #every year june 30
 ]
 
 

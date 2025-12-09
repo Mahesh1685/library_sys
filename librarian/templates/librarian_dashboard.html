@@ -115,17 +115,17 @@
       {% endfor %}
     {% endif %}
 
-    <h2>🔐 Librarian Dashboard</h2>
+    <h2>Librarian Dashboard</h2>
     <div class="nav">
-      <a href="{% url 'add_book' %}">➕ Add Book</a>
-      <a href="{% url 'approve_students' %}">👥 Approve Students</a>
-      <a href="{% url 'book_list' %}">📚 View All Books</a>
+      <a href="{% url 'add_book' %}">Add Book</a>
+      <a href="{% url 'approve_students' %}">Approve Students</a>
+      <a href="{% url 'book_list' %}">View All Books</a>
       <a class="logout" href="{% url 'logout' %}">Logout</a>
     </div>
 
     <!-- Pending Students -->
     <div class="section">
-      <h3>🆕 Pending Student Registrations</h3>
+      <h3>Pending Student Registrations</h3>
       {% if pending_students %}
       <table>
         <tr>
@@ -156,7 +156,7 @@
 
     <!-- Approved Students -->
     <div class="section">
-      <h3>🎓 Approved Students</h3>
+      <h3>Approved Students</h3>
       {% if approved_students %}
         <!-- Search Bar -->
         <div class="search-bar" style="margin: 10px 0;">
@@ -195,7 +195,7 @@
 
     <!-- Pending Borrow Requests -->
     <div class="section">
-      <h3>📥 Pending Borrow Requests</h3>
+      <h3>Pending Borrow Requests</h3>
         {% if pending_requests %}
           <table>
             <tr>
@@ -225,7 +225,7 @@
 
     <!-- Books Section -->
     <div class="section">
-      <h3>📘 Books in Library</h3>
+      <h3>Books in Library</h3>
       <table>
         <tr>
           <th>Title</th>
@@ -257,7 +257,7 @@
 
     <!-- Currently Issued Books -->
 <div class="section">
-  <h3>📖 Currently Issued Books</h3>
+  <h3>Currently Issued Books</h3>
   {% if borrowed_books %}
     <table>
       <tr>
