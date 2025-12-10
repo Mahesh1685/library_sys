@@ -15,7 +15,7 @@ def send_due_date_reminders(): #function for due date remainder
     books = BorrowedBook.objects.filter(handover_date__isnull=False, due_date=upcoming_date, return_date__isnull=True)
     for b in books:
         send_mail(
-            "📚 Reminder: Book Due Soon",
+            "Reminder: Book Due Soon",
             f"""
         Hello {b.student.username},
 
@@ -34,7 +34,7 @@ def send_monthly_report(): #function for sending monthly report
     librarian = CustomUser.objects.filter(role='librarian', is_approved=True).first()
     if librarian:
         msg = EmailMessage(
-            f"📊 Monthly Library Report - {(timezone.now().replace(day=1) - timedelta(days=1)).strftime('%B %Y')}",
+            f"Monthly Library Report - {(timezone.now().replace(day=1) - timedelta(days=1)).strftime('%B %Y')}",
             "See attached report.",
             settings.DEFAULT_FROM_EMAIL,
             [librarian.email]
