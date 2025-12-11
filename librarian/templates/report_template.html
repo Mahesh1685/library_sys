@@ -2,167 +2,272 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Monthly Library Report</title>
+  <title>Monthly Library Report - {{ month }}</title>
   <style>
+    @page {
+      size: A4;
+      margin: 1.5cm;
+      @bottom-center {
+        content: element(footer);
+      }
+    }
+
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
       background: white;
       color: #333;
-      padding: 2cm;
+      line-height: 1.6;
+      padding: 0;
       margin: 0;
-      size: A4;
     }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Header */
     .header {
       text-align: center;
-      margin-bottom: 30px;
+      padding-bottom: 20px;
       border-bottom: 2px solid #3498db;
-      padding-bottom: 15px;
+      margin-bottom: 30px;
     }
+
     .header h1 {
       color: #2c3e50;
+      font-size: 28px;
+      font-weight: 600;
       margin: 0;
-      font-size: 24px;
     }
+
     .header p {
       color: #7f8c8d;
       font-size: 16px;
       margin: 5px 0;
     }
+
+    .period {
+      font-size: 18px;
+      color: #2980b9;
+      font-weight: 500;
+      margin: 10px 0;
+    }
+
+    /* Summary Cards */
     .summary {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
-      margin: 20px 0;
+      margin: 20px 0 30px;
     }
-    .stat-box {
+
+    .card {
       background: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
+      padding: 18px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       text-align: center;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-    }
-    .stat-box strong {
-      display: block;
-      font-size: 20px;
-      color: #2980b9;
-    }
-    h2 {
-      color: #2c3e50;
       border-left: 4px solid #3498db;
-      padding-left: 10px;
-      margin: 30px 0 15px;
     }
+
+    .card-title {
+      font-size: 14px;
+      color: #555;
+      margin: 0 0 8px;
+      font-weight: 500;
+    }
+
+    .card-value {
+      font-size: 22px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    /* Section Title */
+    .section-title {
+      color: #2c3e50;
+      font-size: 20px;
+      font-weight: 600;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 8px;
+      margin: 30px 0 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #3498db;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
       margin: 15px 0;
+      font-size: 14px;
     }
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
+
     th {
-      background-color: #f1f3f5;
-      color: #2c3e50;
+      background-color: #3498db;
+      color: white;
       font-weight: 600;
+      text-align: left;
+      padding: 12px 10px;
     }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
-    .footer {
-      text-align: center;
-      margin-top: 50px;
-      color: #7f8c8d;
-      font-size: 14px;
-      border-top: 1px solid #eee;
-      padding-top: 10px;
+
+    tr:hover {
+      background-color: #f1f7ff;
     }
-    @media screen {
-      body {
-        background: #f4f6f9;
-      }
+
+    .rank {
+      font-weight: bold;
+      color: #2980b9;
+    }
+
+    /* Footer */
+    .footer {
+      position: running(footer);
+      text-align: center;
+      font-size: 12px;
+      color: #7f8c8d;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+      margin-top: 30px;
+    }
+
+    .footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    /* No Data */
+    .no-data {
+      text-align: center;
+      color: #95a5a6;
+      font-style: italic;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    /* Logo (Optional) */
+    .logo {
+      width: 60px;
+      height: 60px;
+      background: #3498db;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 auto 10px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <div class="header">
-    <h1>Library Management System</h1>
-    <p>Monthly Activity Report | Generated on: {{ today|date:"F d, Y" }}</p>
-    <p><strong>Reporting Period:</strong> {{ start_date|date:"F d, Y" }} – {{ end_date|date:"F d, Y" }}</p>
-  </div>
+  <div class="container">
 
-  <!-- Summary Stats -->
-  <div class="summary">
-    <div class="stat-box">
-      <strong>{{ total_issued }}</strong>
-      Books Issued
+    <!-- Header -->
+    <div class="header">
+      <!-- Optional Logo -->
+      <!-- <div class="logo">LMS</div> -->
+      <h1>📚 Library Management System</h1>
+      <p class="generated">Generated on: {{ today|date:"F d, Y" }} at {{ today|date:"H:i" }}</p>
+      <p class="period"><strong>Reporting Period:</strong> {{ start_date|date:"F d, Y" }} – {{ end_date|date:"F d, Y" }}</p>
     </div>
-    <div class="stat-box">
-      <strong>₹{{ total_fines_collected|floatformat:2 }}</strong>
-      Fines Collected
-    </div>
-    <div class="stat-box">
-      <strong>{{ new_books.count }}</strong>
-      New Books Added
-    </div>
-    <div class="stat-box">
-      <strong>{{ total_books }}</strong>
-      Total Books
-    </div>
-  </div>
 
-  <!-- Top Borrowed Books -->
-  <h2>Most Borrowed Books (Top 10)</h2>
-  {% if top_books %}
-    <table>
-      <tr>
-        <th>Rank</th>
-        <th>Book Title</th>
-        <th>Author</th>
-        <th>Borrow Count</th>
-      </tr>
-      {% for book in top_books %}
-      <tr>
-        <td><strong>#{{ forloop.counter }}</strong></td>
-        <td>{{ book.book__title }}</td>
-        <td>{{ book.book__author }}</td>
-        <td>{{ book.count }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  {% else %}
-    <p>No books were borrowed this month.</p>
-  {% endif %}
+    <!-- Summary Stats -->
+    <div class="summary">
+      <div class="card">
+        <p class="card-title">Total Books in Library</p>
+        <p class="card-value">{{ total_books }}</p>
+      </div>
+      <div class="card">
+        <p class="card-title">Books Issued This Month</p>
+        <p class="card-value">{{ total_issued }}</p>
+      </div>
+      <div class="card">
+        <p class="card-title">Fines Collected (₹)</p>
+        <p class="card-value">₹{{ total_fines_collected|floatformat:2 }}</p>
+      </div>
+      <div class="card">
+        <p class="card-title">New Books Added</p>
+        <p class="card-value">{{ new_books.count }}</p>
+      </div>
+    </div>
 
-  <!-- New Books Added -->
-  <h2>New Books Added This Month</h2>
-  {% if new_books %}
-    <table>
-      <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th>Copies</th>
-      </tr>
-      {% for book in new_books %}
-      <tr>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.isbn }}</td>
-        <td>{{ book.total_copies }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  {% else %}
-    <p>No new books were added this month.</p>
-  {% endif %}
+    <!-- Top Borrowed Books -->
+    <h2 class="section-title">🏆 Most Borrowed Books (Top 10)</h2>
+    {% if top_books %}
+      <table>
+        <tr>
+          <th>Rank</th>
+          <th>Book Title</th>
+          <th>Author</th>
+          <th>Borrow Count</th>
+        </tr>
+        {% for book in top_books %}
+        <tr>
+          <td class="rank">#{{ forloop.counter }}</td>
+          <td>{{ book.book__title }}</td>
+          <td>{{ book.book__author }}</td>
+          <td><strong>{{ book.count }}</strong></td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="no-data">No books were borrowed this month.</div>
+    {% endif %}
 
-  <!-- Footer -->
-  <div class="footer">
-    <p>Generated automatically by Library Management System | <a href="mailto:admin@library.com">Report Issues</a></p>
+    <!-- New Books Added -->
+    <h2 class="section-title">🆕 New Books Added This Month</h2>
+    {% if new_books %}
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>ISBN</th>
+          <th>Copies</th>
+        </tr>
+        {% for book in new_books %}
+        <tr>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.total_copies }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="no-data">No new books were added this month.</div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Report generated by Library Management System | For support, contact <a href="mailto:admin@library.com">admin@library.com</a></p>
+    </div>
+
   </div>
 
 </body>
